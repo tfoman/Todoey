@@ -24,6 +24,7 @@ class TodoListViewController: UITableViewController {
         let newItem2 = Item(t_ext: "Buy eggos",ch_ecked: false)
         itemArray.append(newItem2)
         let newItem3 = Item(t_ext: "Destroy Demogorgon",ch_ecked: false)
+        itemArray.append(newItem3)
 
 
 //        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
@@ -37,16 +38,13 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        //print("Cellforrowatindex Called")
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row].title
         
-        if itemArray[indexPath.row].done == true {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
+        let item = itemArray[indexPath.row]
+
+        cell.textLabel?.text = item.title
+        
+        cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
     }
@@ -56,11 +54,7 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
         
-        if itemArray[indexPath.row].done == false {
-           itemArray[indexPath.row].done = true
-        } else {
-           itemArray[indexPath.row].done = false
-        }
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         tableView.reloadData()
         
