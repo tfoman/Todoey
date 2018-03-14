@@ -27,9 +27,10 @@ class TodoListViewController: UITableViewController {
         itemArray.append(newItem3)
 
 
-//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
-//            itemArray = items
-//        }
+        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
+            itemArray = items
+        }
+
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -44,6 +45,9 @@ class TodoListViewController: UITableViewController {
 
         cell.textLabel?.text = item.title
         
+        //Ternary operator ==>
+        //value = condition ? valueIfTrue : valueIfFalse
+
         cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
