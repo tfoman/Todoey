@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class TodoListViewController: SwipeTableViewController {
     
@@ -24,10 +25,18 @@ class TodoListViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-                
-        //loadItems()
-
+        tableView.separatorStyle = .none
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let colorHex = selectedCategory?.bgColorHex {
+            guard let navBar = navigationController?.navigationBar else {
+                fatalError("Navigation Controller does not exist ")
+            }
+            navBar.barTintColor = UIColor(hexString: colorHex )
+        }
+        
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -37,10 +46,20 @@ class TodoListViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        if let item = todoItems?[indexPath.row] {
+            cell.textLabel?.text = item.title
+            if let colour = UIColor(hexString: selectedCategory!.bgColorHex)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count)) {
+                    cell.backgroundColor = colour
+                    cell.textLabel?.textColor = ContrastColorOf(colour, returnFlat: true)
+                }
+//            print("Version 1: \(CGFloat(indexPath.row / todoItems!.count))")
+//            print("Version 2: \(CGFloat(indexPath.row) / CGFloat(todoItems!.count))")
+            
+            cell.accessoryType = (todoItems?[indexPath.row].done)! ? .checkmark : .none
         
-        cell.textLabel?.text = todoItems?[indexPath.row].title ?? "No Items Added Yet"
-        cell.accessoryType = (todoItems?[indexPath.row].done)! ? .checkmark : .none
-
+        } else {
+            cell.textLabel?.text = "No Items Added "
+        }
         return cell
         
     }
